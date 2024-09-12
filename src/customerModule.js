@@ -8,47 +8,35 @@ async function get() {
   } catch (error) {
     throw error;
   } finally {
-    // connection.release();
+    connection.release();
   }
 }
 
-async function addCustomer(
-  name,
-  address,
-  email,
-  phone
-) {
+async function addCustomer(name, address, email, phone) {
   const connection = await pool.getConnection();
   try {
     const [result] = await connection.execute(
       "INSERT INTO customers (name,address,email,phone) VALUES (?, ?, ?, ?)",
-      [name,address,email,phone]
+      [name, address, email, phone]
     );
     return result.insertId;
   } catch (error) {}
 }
 
-async function updateCustomer(
-  id,
-  name,
-  address,
-  email,
-  phone
-) {
+async function updateCustomer(id, name, address, email, phone) {
   const connection = await pool.getConnection();
   try {
-
     const [rows] = await connection.execute(
       "SELECT id FROM customers WHERE id = ?",
       [id]
     );
-    
+
     if (rows.length === 0) {
-      throw new Error(`Le client avec l'ID ${id} n'existe pas`);
+      console.log(`Le client avec l'ID ${id} n'existe pas`);
     }
     const [result] = await connection.execute(
       "UPDATE customers SET name=?,address=?,email=?,phone=?, where id = ?",
-      [name,address,email,phone, id]
+      [name, address, email, phone, id]
     );
     console.log("mis a jours");
 
@@ -60,14 +48,15 @@ async function destroyCustomer(id) {
   const connection = await pool.getConnection();
   // console.log(id,connection);
 
-  try {const [rows] = await connection.execute(
-    "SELECT id FROM customers WHERE id = ?",
-    [id]
-  );
-  
-  if (rows.length === 0) {
-    throw new Error(`Le client avec l'ID ${id} n'existe pas`);
-  }
+  try {
+    const [rows] = await connection.execute(
+      "SELECT id FROM customers WHERE id = ?",
+      [id]
+    );
+
+    if (rows.length === 0) {
+      console.log(`Le client avec l'ID ${id} n'existe pas`);
+    }
 
     const result = await connection.execute(
       "DELETE FROM customers where id = ?",
@@ -81,7 +70,7 @@ async function destroyCustomer(id) {
     }
     throw error;
   } finally {
-    // connection.release();
+    connection.release();
   }
 }
 

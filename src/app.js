@@ -42,6 +42,7 @@ function purchaseMenu() {
   console.log("1. Ajouter une commande d'achat");
   console.log("2. Mettre à jour les informations d'une commande d'achat");
   console.log("3. Lister la commande d'achat");
+  console.log("4. Supprimer la commande d'achat");
   console.log("0. Retourner au menu principal");
   const choice = readlineSync.question("Votre choix: ");
   return choice;
@@ -159,7 +160,7 @@ async function main() {
                   emails,
                   phonee
                 );
-                console.log("client ajouté avec succès !");
+                // console.log("client ajouté avec succès !");
                 break;
               case "4":
                 const deleteId = readlineSync.questionInt(
@@ -371,12 +372,18 @@ async function main() {
               case "3":
 
                 const orderid = readlineSync.questionInt(
-                  "Entrez l'id du commande ç lister: "
+                  "Entrez l'id du commande a lister: "
                 );
                 const listId = await orderModule.getOrderById(orderid);
                 console.table(listId);
 
                 break;
+                case "4":
+                  const deOorderid = readlineSync.questionInt(
+                    "Entrez l'id du commande a supprimer: "
+                  );
+                   await orderModule.destroyOrder(deOorderid);
+                  break;
               default:
                 console.log("Option invalide");
                 break;
